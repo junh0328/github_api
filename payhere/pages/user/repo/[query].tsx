@@ -138,11 +138,11 @@ const Repository = () => {
                     <a>이슈명: {v.title}</a>
                   </Link>
                   <a>({query})</a>
-                  <div>
+                  <div style={{ padding: '10px 0' }}>
                     {v.labels.length ? (
-                      <div>
+                      <div css={labelWrap}>
                         {v.labels.map((v) => (
-                          <a key={v.id} style={{ marginRight: 5 }}>
+                          <a key={v.id} style={{}}>
                             {v.name}
                           </a>
                         ))}
@@ -193,5 +193,16 @@ const userWrap = css`
     p {
       font-size: 0.9rem;
     }
+  }
+`
+
+const labelWrap = css`
+  a {
+    background-color: #d3d3d3;
+    font-size: 1rem !important;
+    margin-right: 5;
+    border: 1px solid #d3d3d3;
+    border-radius: 20px;
+    padding: 8px 10px;
   }
 `
