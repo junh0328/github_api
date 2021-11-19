@@ -11,6 +11,7 @@ const Home: NextPage = () => {
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault()
+      localStorage.setItem('name', name)
       setName('')
       router.push(`/user/${name}`)
     },

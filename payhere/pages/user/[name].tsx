@@ -5,6 +5,13 @@ import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { userRepoData } from 'types'
 
+interface keyInterface {
+  id: number
+  name: string
+  description: string
+  // 이슈에 해당하는 href 추가 필요
+}
+
 const User = () => {
   const router = useRouter()
   const { name } = router.query
@@ -14,23 +21,33 @@ const User = () => {
   const [repos, setRepos] = useState<userRepoData[]>([])
   const [query, setQuery] = useState('')
 
+  const [keywords, setKeywords] = useState<keyInterface[]>([])
+
   useEffect(() => {
     if (name) {
       fetchUser(name)
     }
   }, [name])
 
+  // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const result = localStorage.getItem('keywords') || '[]'
+      setKeywords(JSON.parse(result))
+    }
+  }, [])
+
+  // ② keywords 객체를 의존하여, 변경될 경우 새롭게 localStroage의 아이템 'keywords'를 세팅한다
+  useEffect(() => {
+    localStorage.setItem('keywords', JSON.stringify(keywords))
+  }, [keywords])
+
   const fetchRepo = useCallback(
-    async (e) => {
+    (e) => {
       e.preventDefault()
-      setQuery('')
-      try {
-        await axios.get(`https://api.github.com/repos/${name}/${query}`).then((res) => console.log('res:', res))
-      } catch (err) {
-        console.error(err)
-      }
+      router.push(`/user/repo/${query}`)
     },
-    [name, query]
+    [router, query]
   )
 
   const fetchUser = useCallback(async (name) => {
@@ -51,21 +68,44 @@ const User = () => {
     }
   }, [])
 
-  const addPublicRepo = useCallback((name, description) => {
-    console.log(`레포지토리명: ${name}\n설명: ${description}`)
-  }, [])
+  /* 로컬 스토리지에 퍼블릭 레포지토리 저장하기 */
+  const addPublicRepo = useCallback(
+    (id, name, description) => {
+      if (keywords.length >= 4) {
+        alert('더이상 즐겨찾는 레포지토리를 추가할 수 없습니다.')
+        return
+      } else {
+        alert(`id:${id}\n레포지토리명: ${name}\n설명: ${description}`)
+
+        const newKeyword: keyInterface = {
+          id: id,
+          name: name,
+          description: description,
+        }
+        setKeywords([...keywords, newKeyword])
+      }
+    },
+    [keywords]
+  )
 
   return (
     <div css={userWrap}>
-      <div>{githubName ? <span>{githubName}님 환영합니다</span> : <span>Loading...</span>}</div>
-      <form onSubmit={fetchRepo}>
-        <input
-          style={{ width: 300 }}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={`${githubName}님의 레포지토리를 검색해보세요`}
-        />
-      </form>
+      <div style={{ width: '100%', textAlign: 'center' }}>
+        <div>
+          <Link href="/keywords">
+            <a>즐겨찾는 레포지토리로 가기</a>
+          </Link>
+        </div>
+        <div>{githubName ? <span>{githubName}님 환영합니다</span> : <span>Loading...</span>}</div>
+        <form onSubmit={fetchRepo}>
+          <input
+            style={{ width: 300 }}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder={`${githubName}님의 레포지토리를 검색해보세요`}
+          />
+        </form>
+      </div>
       <div>
         {fetchData ? (
           <ul>
@@ -76,8 +116,11 @@ const User = () => {
                     <a>{v.name}</a>
                   </Link>
                   <p>{v.description}</p>
-                  <button type="button" onClick={() => addPublicRepo(v.name, v.description)}>
+                  <button type="button" onClick={() => addPublicRepo(v.id, v.name, v.description)}>
                     등록하기
+                  </button>
+                  <button type="button" onClick={() => router.push(`/user/repo/${v.name}`)}>
+                    이동하기
                   </button>
                 </li>
               ))
@@ -112,5 +155,9 @@ const userWrap = css`
     p {
       font-size: 0.9rem;
     }
+  }
+
+  button {
+    margin-right: 5px;
   }
 `
