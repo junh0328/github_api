@@ -2,7 +2,8 @@ import { css } from '@emotion/react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { userRepoData } from 'types'
+import { userRepoData, userRepoIssue } from 'types'
+import Link from 'next/link'
 
 interface keyInterface {
   id: number
@@ -19,6 +20,8 @@ const Repository = () => {
   const [localName, setLocalName] = useState<string | null>('')
   /* axios fetching 결과 */
   const [result, setResult] = useState<userRepoData[]>([])
+  /* axios fetching issue 결과 */
+  const [issue, setIssue] = useState<userRepoIssue[]>([])
 
   /* 로컬 스토리지에 저장할 키워드 배열 */
   const [keywords, setKeywords] = useState<keyInterface[]>([])
@@ -37,6 +40,7 @@ const Repository = () => {
   useEffect(() => {
     if (localName && query) {
       fetchRepo(localName, query)
+      fetchIssue(localName, query)
     }
   }, [query, localName])
 
@@ -59,6 +63,19 @@ const Repository = () => {
         if (res.status === 200) {
           console.log('res:', res)
           setResult(Array(res.data))
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }, [])
+
+  const fetchIssue = useCallback(async (localName, query) => {
+    try {
+      await axios.get(`https://api.github.com/repos/${localName}/${query}/issues`).then((res) => {
+        if (res.status === 200) {
+          console.log('get issues:', res)
+          setIssue(res.data)
         }
       })
     } catch (err) {
@@ -109,6 +126,39 @@ const Repository = () => {
           <div>Loading</div>
         )}
       </div>
+
+      <div>
+        {issue.length ? (
+          <>
+            <h2>이슈 리스트</h2>
+            <ul>
+              {issue.map((v) => (
+                <li key={v.id}>
+                  <Link href={v.html_url}>
+                    <a>이슈명: {v.title}</a>
+                  </Link>
+                  <a>({query})</a>
+                  <div>
+                    {v.labels.length ? (
+                      <div>
+                        {v.labels.map((v) => (
+                          <a key={v.id} style={{ marginRight: 5 }}>
+                            {v.name}
+                          </a>
+                        ))}
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center' }}>작성하신 이슈가 없어요...</div>
+        )}
+      </div>
     </div>
   )
 }
@@ -116,6 +166,17 @@ const Repository = () => {
 export default Repository
 
 const userWrap = css`
+  h1 {
+    text-align: center;
+  }
+
+  h2 {
+    text-align: center;
+  }
+
+  a {
+    margin-right: 5px;
+  }
   ul {
     list-style: none;
     padding: 0 40px;

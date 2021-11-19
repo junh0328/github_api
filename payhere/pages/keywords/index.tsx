@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface keyInterface {
   id: number
@@ -60,6 +60,9 @@ const Keywords = () => {
               <li key={v.id}>
                 <a>{v.name}</a>
                 <p>{v.description}</p>
+                <button type="button" onClick={() => router.push(`/user/repo/${v.name}`)}>
+                  이슈보기
+                </button>
                 <button type="button" onClick={() => handleRemoveKeyword(v.id)}>
                   삭제하기
                 </button>
