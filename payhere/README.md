@@ -1,34 +1,48 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 페이히어 프론트엔드 엔지니어 과제 전형
 
-## Getting Started
+## 요구사항
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+```
+고객은 내가 자주 가는 GitHub의 Public Repository의 Issue들을 모아서 보고 싶다.
+찾아보니 GitHub에서 Open API를 제공하기 때문에, 이를 활용해서 개발할 수 있다. 자세한 요구사항은 다음과 같다.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. 검색창에 Repository명을 입력해서 Repository를 검색할 수 있다. (API)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+2. 검색된 Public Repository를 등록할 수 있다. (Local Storage)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- 등록 개수는 최대 4개로 제한하며, 최대 개수 초과 등록 시 이를 사용자에게 알려준다.
+- 웹은 LocalStorage, 앱은 Async Storage 등 로컬 저장소를 활용한다. (웹 혹은 앱 선택)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+3. 등록된 Repository를 삭제할 수 있다. (Local Storage)
 
-## Learn More
+4. 등록된 각각의 Public Repository의 issue를 한 페이지에서 모아서 볼 수 있다.
 
-To learn more about Next.js, take a look at the following resources:
+- 각 issue 마다 제목, Repository 명은 필수로 표현되어야 한다. 그 이외의 데이터 중 필요하다고 생각되는 부분은 추가한다.
+- 해당 issue를 클릭하면 Github의 상세 페이지로 이동할 수 있다.
+- 페이지네이션을 통해서 계속해서 issue를 모아서 볼 수 있다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 체크리스트
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [ ] 검색창에서 레포지토리 명을 입력해서 검색할 수 있는가?
+- [ ] 검색된 레포지토리를 등록할 수 있는가? (즐겨찾기와 같은 기능/ 로컬 스토리지에 저장)
+- [ ] 최대 4개까지 등록하고 초과 등록시 이를 핸들링할 수 있는 로직이 들어가는가?
+- [ ] 등록한 레포지토리를 삭제할 수 있는가?
+- [ ] 등록된 각각의 레포지토리의 이슈 들을 한 페이지에서 모아볼 수 있는가?
 
-## Deploy on Vercel
+## 페이지네이션
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 인덱스 페이지
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- (사용자 아이디를 바탕으로 검색)
+
+### user 페이지
+
+- 검색된 사용자의 레포지토리를 나열
+- 퍼블릭 레포지토리를 등록/ 삭제
+
+### 마이 페이지
+
+- 퍼블릭 레포지토리의 이슈를 한 페이지에서 모아서 봄
+- 페이지네이션 기능까지
+- 해당 이슈 클릭시 실제 이슈로 이동하는 라우팅 기능 포함

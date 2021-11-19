@@ -23,7 +23,6 @@ const Home: NextPage = () => {
       </Head>
 
       <div css={wrap}>
-        <h1>메인 페이지입니다</h1>
         <form onSubmit={onSubmit}>
           <input
             style={{ width: 300 }}
@@ -42,11 +41,8 @@ export default Home
 const wrap = css`
   width: 100%;
   height: 100vh;
-
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
 
   h1 {
     width: 100%;
