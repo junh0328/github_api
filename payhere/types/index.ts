@@ -9,9 +9,11 @@ export type userInfo = {
   name: string
   node_id: string
   /* 퍼블릭 레포지토리 개수 */
-  public_repos: string
+  public_repos: number
   repos_url: string
   url: string
+  followers: number
+  following: number
 }
 
 export type userRepoData = {

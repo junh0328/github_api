@@ -43,10 +43,10 @@ const Keywords = () => {
   return (
     <div css={userWrap}>
       <div css={infoWrap}>
-        <h1>마이 페이지</h1>
+        <h1>등록된 키워드 페이지</h1>
         <p>
           <button type="button" onClick={() => router.back()}>
-            뒤로가기
+            이전 페이지로
           </button>
           <button type="button" onClick={() => handleClearKeywords()}>
             전체 삭제하기

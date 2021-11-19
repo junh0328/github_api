@@ -3,7 +3,8 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
-import { userRepoData } from 'types'
+import { Common } from 'styles/common'
+import { userInfo, userRepoData } from 'types'
 
 interface keyInterface {
   id: number
@@ -17,9 +18,8 @@ const User = () => {
   const { name } = router.query
 
   const [fetchData, setFetchData] = useState<boolean>(false)
-  const [githubName, setGithubName] = useState<string>('')
+  const [userInfo, setUserInfo] = useState<userInfo[]>([])
   const [repos, setRepos] = useState<userRepoData[]>([])
-  const [query, setQuery] = useState('')
 
   const [keywords, setKeywords] = useState<keyInterface[]>([])
 
@@ -42,22 +42,14 @@ const User = () => {
     localStorage.setItem('keywords', JSON.stringify(keywords))
   }, [keywords])
 
-  const fetchRepo = useCallback(
-    (e) => {
-      e.preventDefault()
-      router.push(`/user/repo/${query}`)
-    },
-    [router, query]
-  )
-
   const fetchUser = useCallback(async (name) => {
     try {
       await axios.get(`https://api.github.com/users/${name}`).then((res) => {
         if (res.status === 200) {
-          setGithubName(res.data.name)
+          setUserInfo(Array(res.data))
         }
       })
-      await axios.get(`https://api.github.com/users/${name}/repos?per_page=10`).then((res) => {
+      await axios.get(`https://api.github.com/users/${name}/repos?per_page=20`).then((res) => {
         if (res.status === 200) {
           setRepos(res.data)
         }
@@ -90,47 +82,56 @@ const User = () => {
 
   return (
     <div css={userWrap}>
-      <div style={{ width: '100%', textAlign: 'center' }}>
-        <div>
-          <Link href="/keywords">
-            <a>즐겨찾는 레포지토리로 가기</a>
-          </Link>
-        </div>
-        <div>{githubName ? <span>{githubName}님 환영합니다</span> : <span>Loading...</span>}</div>
-        <form onSubmit={fetchRepo}>
-          <input
-            style={{ width: 300 }}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={`${githubName}님의 레포지토리를 검색해보세요`}
-          />
-        </form>
-      </div>
-      <div>
-        {fetchData ? (
-          <ul>
-            {repos.length ? (
-              repos.map((v, i) => (
-                <li key={v.id}>
-                  <Link href={`${v.html_url}`}>
-                    <a>{v.name}</a>
-                  </Link>
-                  <p>{v.description}</p>
-                  <button type="button" onClick={() => addPublicRepo(v.id, v.name, v.description)}>
-                    등록하기
-                  </button>
-                  <button type="button" onClick={() => router.push(`/user/repo/${v.name}`)}>
-                    이동하기
-                  </button>
-                </li>
-              ))
+      <div style={{ display: ' flex', paddingTop: '10px' }}>
+        <div style={{ width: '25%', textAlign: 'center' }}>
+          <div>
+            {userInfo ? (
+              <div>
+                {userInfo.map((v) => (
+                  <div key={v.id} style={{ paddingLeft: 20 }}>
+                    <img src={`${v.avatar_url}`} alt="avatar" style={{ borderRadius: '50%', width: '100%' }} />
+                    <div style={{ textAlign: 'left', width: '100%' }}>
+                      <p style={{ fontWeight: 'bold', fontSize: '1.7rem', width: '100%', margin: 0 }}>{v.name}</p>
+                      <span style={{ width: '100%', fontSize: '1.3rem', color: 'grey' }}>{v.login}</span>
+                      <p style={{ color: 'grey' }}>{v.bio}</p>
+                      <p>📌 followers: {v.followers}</p>
+                      <p>📌 following: {v.following}</p>
+                      <p>📌 repositories: {v.public_repos}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
-              <div>가져올 수 있는 데이터가 없어요...</div>
+              <span>Loading...</span>
             )}
-          </ul>
-        ) : (
-          <div>Loading...</div>
-        )}
+          </div>
+        </div>
+        <div style={{ width: '75%' }}>
+          {fetchData ? (
+            <ul>
+              {repos.length ? (
+                repos.map((v, i) => (
+                  <li key={v.id}>
+                    <Link href={`${v.html_url}`}>
+                      <a>{v.name}</a>
+                    </Link>
+                    <p>{v.description}</p>
+                    <button type="button" onClick={() => addPublicRepo(v.id, v.name, v.description)}>
+                      등록하기
+                    </button>
+                    <button type="button" onClick={() => router.push(`/user/repo/${v.name}`)}>
+                      이동하기
+                    </button>
+                  </li>
+                ))
+              ) : (
+                <div>가져올 수 있는 데이터가 없어요...</div>
+              )}
+            </ul>
+          ) : (
+            <div>Loading...</div>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -139,17 +140,51 @@ const User = () => {
 export default User
 
 const userWrap = css`
+  min-width: 1080px;
+  form {
+    padding-left: 2%;
+    display: flex;
+
+    img {
+      width: 40px;
+      background-color: white;
+      border-radius: 50%;
+    }
+    input {
+      margin-left: 2%;
+      padding: 0 15px;
+      border: 1px solid ${Common.colors.white};
+      border-radius: 10px;
+      width: 300px;
+      background-color: ${Common.colors.navy};
+      color: ${Common.colors.white};
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: ${Common.colors.navy};
+      color: ${Common.colors.white};
+      font-weight: bolder;
+    }
+
+    input::placeholder {
+      color: ${Common.colors.white};
+    }
+  }
   ul {
     list-style: none;
     padding: 0 40px;
   }
 
   li {
-    border: 1px solid black;
+    border-bottom: 1px solid grey;
     margin-bottom: 10px;
     padding: 10px;
 
     a {
+      color: #0969da;
+      font-weight: bolder;
       font-size: 1.3rem;
     }
     p {
@@ -159,5 +194,14 @@ const userWrap = css`
 
   button {
     margin-right: 5px;
+  }
+`
+
+const navbar = css`
+  padding: 10px 0;
+  background-color: ${Common.colors.navy};
+
+  button {
+    margin-left: 10px;
   }
 `
