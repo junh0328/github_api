@@ -12,14 +12,20 @@ interface keyInterface {
 }
 
 const Issues = () => {
+  /* 로컬스토리지에 저장했던 키워드(모아보기 객체) */
   const [keywords, setKeywords] = useState<keyInterface[]>([])
+  /* 로컬스토리지에 저장했던 유저의 깃허브 이름 */
   const [localName, setLocalName] = useState<string | null>('')
-
+  /* 패칭한 이슈 */
   const [issues, setIssues] = useState<userRepoIssue[]>([])
 
-  useEffect(() => {
-    console.log('issues:', issues)
-  }, [issues])
+  // -- 페이지네이션 --
+  // const [currentPage, setCurrentPage] = useState(1)
+  // const [postsPerPage] = useState(10)
+
+  // const indexOfLastPost = currentPage * postsPerPage
+  // const indexOfFirstPost = indexOfLastPost - postsPerPage
+  // const currentPosts = issues.slice(indexOfFirstPost, indexOfLastPost)
 
   // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
   useEffect(() => {
@@ -53,7 +59,7 @@ const Issues = () => {
         console.error(err)
       }
     },
-    [localName]
+    [localName, issues]
   )
 
   return (
@@ -63,6 +69,7 @@ const Issues = () => {
       <div>
         {issues.length ? (
           <ul className="ulWrap">
+            {/* 10개만 보여주기 */}
             {issues.map((v) => (
               <li key={v.id}>
                 <div style={{ marginBottom: '15px' }}>
@@ -100,6 +107,10 @@ const Issues = () => {
 export default Issues
 
 const userWrap = css`
+  min-width: 1080px;
+  max-width: 1280px;
+  margin: 0 auto;
+
   ul {
     list-style: none;
     padding: 0 40px;

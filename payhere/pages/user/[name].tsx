@@ -29,6 +29,10 @@ const User = () => {
     }
   }, [name])
 
+  useEffect(() => {
+    console.log('userInfo:', userInfo)
+  }, [userInfo])
+
   // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -88,11 +92,26 @@ const User = () => {
             <div>
               {userInfo.map((v) => (
                 <div key={v.id} style={{ paddingLeft: 20 }}>
-                  <img src={`${v.avatar_url}`} alt="avatar" style={{ borderRadius: '50%', width: '100%' }} />
+                  <Link href={`${v.html_url}`} passHref={true}>
+                    <img
+                      src={`${v.avatar_url}`}
+                      alt="avatar"
+                      style={{ borderRadius: '50%', width: '100%', cursor: 'pointer', marginBottom: 20 }}
+                    />
+                  </Link>
                   <div style={{ textAlign: 'left', width: '100%' }}>
-                    <p style={{ fontWeight: 'bold', fontSize: '1.7rem', width: '100%', margin: 0 }}>{v.name}</p>
-                    <span style={{ width: '100%', fontSize: '1.3rem', color: 'grey' }}>{v.login}</span>
+                    <p style={{ fontWeight: 'bold', fontSize: '1.7rem', width: '100%', margin: 0 }}>
+                      <Link href={`${v.html_url}`}>
+                        <a>{v.name}</a>
+                      </Link>
+                    </p>
+                    <span style={{ width: '100%', fontSize: '1.3rem', color: 'grey' }}>
+                      <Link href={`${v.html_url}`}>
+                        <a>{v.login}</a>
+                      </Link>
+                    </span>
                     <p style={{ color: 'grey' }}>{v.bio}</p>
+                    <p>{v.location}</p>
                     <p>📌 followers: {v.followers}</p>
                     <p>📌 following: {v.following}</p>
                     <p>📌 repositories: {v.public_repos}</p>

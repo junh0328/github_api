@@ -9,15 +9,11 @@ const AppLayOut = () => {
   const [isName, setIsName] = useState<boolean>(false)
 
   useEffect(() => {
-    console.log('isName', isName)
-  }, [isName])
-
-  useEffect(() => {
     if (typeof window !== 'undefined') {
       const bool = localStorage.getItem('name')
       if (bool?.length) setIsName(true)
     }
-  })
+  }, [])
 
   const onChange = useCallback(
     (e) => {
@@ -39,7 +35,7 @@ const AppLayOut = () => {
         router.push(`/user/repo/${query}`)
       }
     },
-    [router, query]
+    [query]
   )
 
   return (

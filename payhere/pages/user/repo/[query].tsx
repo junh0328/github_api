@@ -130,7 +130,7 @@ const Repository = () => {
       <div>
         {issue.length ? (
           <>
-            <h2>이슈 리스트</h2>
+            <h2>Issues</h2>
             <ul>
               {issue.map((v) => (
                 <li key={v.id}>
@@ -182,8 +182,12 @@ const userWrap = css`
     padding: 0 40px;
   }
 
+  li:first-of-type {
+    border-top: 1px solid black;
+  }
+
   li {
-    border: 1px solid black;
+    border-bottom: 1px solid black;
     margin-bottom: 10px;
     padding: 10px;
 
