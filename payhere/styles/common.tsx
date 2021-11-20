@@ -5,5 +5,7 @@ export const Common = {
     skyblue: '#f6f8fa',
 
     white: '#ffffff',
+
+    githubBlue: '#0969da',
   },
 }

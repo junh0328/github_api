@@ -30,6 +30,7 @@ export type userRepoIssue = {
   id: number
   title: string
   html_url: string
+  repository_url: string
   url: string
   labels: issueLabel[]
 }

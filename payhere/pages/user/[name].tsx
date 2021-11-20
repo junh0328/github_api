@@ -82,31 +82,29 @@ const User = () => {
 
   return (
     <div css={userWrap}>
-      <div style={{ display: ' flex', paddingTop: '10px' }}>
-        <div style={{ width: '25%', textAlign: 'center' }}>
-          <div>
-            {userInfo ? (
-              <div>
-                {userInfo.map((v) => (
-                  <div key={v.id} style={{ paddingLeft: 20 }}>
-                    <img src={`${v.avatar_url}`} alt="avatar" style={{ borderRadius: '50%', width: '100%' }} />
-                    <div style={{ textAlign: 'left', width: '100%' }}>
-                      <p style={{ fontWeight: 'bold', fontSize: '1.7rem', width: '100%', margin: 0 }}>{v.name}</p>
-                      <span style={{ width: '100%', fontSize: '1.3rem', color: 'grey' }}>{v.login}</span>
-                      <p style={{ color: 'grey' }}>{v.bio}</p>
-                      <p>📌 followers: {v.followers}</p>
-                      <p>📌 following: {v.following}</p>
-                      <p>📌 repositories: {v.public_repos}</p>
-                    </div>
+      <div style={{ display: ' flex', paddingTop: '10px', width: '100%', flexWrap: 'wrap' }}>
+        <div className="userInfo">
+          {userInfo ? (
+            <div>
+              {userInfo.map((v) => (
+                <div key={v.id} style={{ paddingLeft: 20 }}>
+                  <img src={`${v.avatar_url}`} alt="avatar" style={{ borderRadius: '50%', width: '100%' }} />
+                  <div style={{ textAlign: 'left', width: '100%' }}>
+                    <p style={{ fontWeight: 'bold', fontSize: '1.7rem', width: '100%', margin: 0 }}>{v.name}</p>
+                    <span style={{ width: '100%', fontSize: '1.3rem', color: 'grey' }}>{v.login}</span>
+                    <p style={{ color: 'grey' }}>{v.bio}</p>
+                    <p>📌 followers: {v.followers}</p>
+                    <p>📌 following: {v.following}</p>
+                    <p>📌 repositories: {v.public_repos}</p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <span>Loading...</span>
-            )}
-          </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <span>Loading...</span>
+          )}
         </div>
-        <div style={{ width: '75%' }}>
+        <div className="repoInfo">
           {fetchData ? (
             <ul>
               {repos.length ? (
@@ -141,6 +139,26 @@ export default User
 
 const userWrap = css`
   min-width: 1080px;
+  max-width: 1280px;
+  margin: 0 auto;
+
+  .userInfo {
+    width: 25%;
+    text-align: center;
+
+    @media (max-width: 420px) {
+      width: 100%;
+    }
+  }
+
+  .repoInfo {
+    width: 75%;
+
+    @media (max-width: 420px) {
+      width: 100%;
+    }
+  }
+
   form {
     padding-left: 2%;
     display: flex;
@@ -183,7 +201,7 @@ const userWrap = css`
     padding: 10px;
 
     a {
-      color: #0969da;
+      color: ${Common.colors.githubBlue};
       font-weight: bolder;
       font-size: 1.3rem;
     }
@@ -194,14 +212,5 @@ const userWrap = css`
 
   button {
     margin-right: 5px;
-  }
-`
-
-const navbar = css`
-  padding: 10px 0;
-  background-color: ${Common.colors.navy};
-
-  button {
-    margin-left: 10px;
   }
 `
