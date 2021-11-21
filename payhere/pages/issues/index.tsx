@@ -79,7 +79,7 @@ const Issues = () => {
           {issues.length ? (
             <Issuses issues={issues} currentPosts={currentPosts} />
           ) : (
-            <Loading comment={'데이터가 없어요...'} />
+            <Loading comment={'레포지토리에 모아볼 수 있는 이슈가 없어요...🥲'} />
           )}
           <Pagination postsPerPage={postsPerPage} totalPosts={issues.length} paginate={paginate} />
         </div>

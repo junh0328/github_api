@@ -168,14 +168,14 @@ const userWrap = css`
     width: 25%;
     text-align: center;
 
-    @media (max-width: 420px) {
+    @media (max-width: 768px) {
       width: 100%;
     }
 
     .userInfoMain {
       padding-left: 20px;
 
-      @media (max-width: 420px) {
+      @media (max-width: 768px) {
         padding: 0 40px;
       }
     }
@@ -184,7 +184,7 @@ const userWrap = css`
   .repoInfo {
     width: 75%;
 
-    @media (max-width: 420px) {
+    @media (max-width: 768px) {
       width: 100%;
     }
   }

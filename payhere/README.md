@@ -13,9 +13,9 @@ $ git clone https://github.com/junh0328/payhere_repo.git
 
 cd payhere
 
-npm i
+npm i / yarn
 
-npm run start
+npm run dev / yarn dev
 ```
 
 <hr/>

@@ -83,7 +83,7 @@ const userWrap = css`
   width: 100%;
 
   background-color: ${Common.colors.navy};
-  @media (max-width: 420px) {
+  @media (max-width: 768px) {
     display: flex;
     form {
       flex-wrap: wrap;
@@ -105,6 +105,7 @@ const userWrap = css`
   }
   form {
     padding-left: 2%;
+    padding-right: 2%;
     display: flex;
 
     img {
@@ -160,6 +161,7 @@ const userWrap = css`
 `
 
 const navbar = css`
+  width: 100%;
   padding: 10px 0;
   background-color: ${Common.colors.navy};
 

@@ -60,7 +60,7 @@ const labelWrap = css`
     border-radius: 20px;
     padding: 8px 10px;
 
-    @media (max-width: 420px) {
+    @media (max-width: 768px) {
       font-size: 0.8rem !important;
       flex-wrap: wrap;
       margin-bottom: 5px;
