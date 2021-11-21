@@ -7,7 +7,6 @@ interface keyInterface {
   id: number
   name: string
   description: string
-  // 이슈에 해당하는 href 추가 필요
 }
 
 const Keywords = () => {
@@ -94,9 +93,11 @@ const userWrap = css`
     padding: 0 40px;
   }
 
+  li:first-of-type {
+    border-top: 1px solid black;
+  }
   li {
-    border: 1px solid black;
-    margin-bottom: 10px;
+    border-bottom: 1px solid black;
     padding: 10px;
 
     a {

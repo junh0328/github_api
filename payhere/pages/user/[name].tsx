@@ -10,7 +10,6 @@ interface keyInterface {
   id: number
   name: string
   description: string
-  // 이슈에 해당하는 href 추가 필요
 }
 
 const User = () => {
@@ -28,10 +27,6 @@ const User = () => {
       fetchUser(name)
     }
   }, [name])
-
-  useEffect(() => {
-    console.log('userInfo:', userInfo)
-  }, [userInfo])
 
   // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
   useEffect(() => {
@@ -142,7 +137,11 @@ const User = () => {
                   </li>
                 ))
               ) : (
-                <div>가져올 수 있는 데이터가 없어요...</div>
+                <div css={nonDataWrap}>
+                  <div>가져올 수 있는 데이터가 없어요... 🥲</div>
+                  <div>깃허브에 등록된 사람인지 다시 검색해주세요</div>
+                  <button onClick={() => router.push('/')}>다시 검색하러 가기</button>
+                </div>
               )}
             </ul>
           ) : (
@@ -231,5 +230,16 @@ const userWrap = css`
 
   button {
     margin-right: 5px;
+  }
+`
+
+const nonDataWrap = css`
+  font-weight: bold;
+  div {
+    margin-bottom: 10px;
+  }
+
+  button {
+    padding: 5px 10px;
   }
 `

@@ -9,7 +9,6 @@ interface keyInterface {
   id: number
   name: string
   description: string
-  // 이슈에 해당하는 href 추가 필요
 }
 
 const Repository = () => {
@@ -25,10 +24,6 @@ const Repository = () => {
 
   /* 로컬 스토리지에 저장할 키워드 배열 */
   const [keywords, setKeywords] = useState<keyInterface[]>([])
-
-  useEffect(() => {
-    console.log('result:', result, result.length)
-  }, [result])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -61,7 +56,6 @@ const Repository = () => {
     try {
       await axios.get(`https://api.github.com/repos/${localName}/${query}`).then((res) => {
         if (res.status === 200) {
-          console.log('res:', res)
           setResult(Array(res.data))
         }
       })
@@ -74,7 +68,6 @@ const Repository = () => {
     try {
       await axios.get(`https://api.github.com/repos/${localName}/${query}/issues`).then((res) => {
         if (res.status === 200) {
-          console.log('get issues:', res)
           setIssue(res.data)
         }
       })
