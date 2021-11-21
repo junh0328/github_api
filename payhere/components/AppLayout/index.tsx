@@ -68,6 +68,7 @@ export default AppLayOut
 
 const userWrap = css`
   min-width: 1080px;
+  height: 5vh;
   form {
     padding-left: 2%;
     display: flex;

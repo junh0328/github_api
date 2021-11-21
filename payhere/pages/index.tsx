@@ -42,7 +42,7 @@ export default Home
 const wrap = css`
   background-color: ${Common.colors.skyblue};
   width: 100%;
-  height: 100vh;
+  height: 95vh;
   display: flex;
   justify-content: center;
   align-items: center;

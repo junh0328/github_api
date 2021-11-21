@@ -4,6 +4,9 @@ import axios from 'axios'
 import { userRepoIssue } from 'types'
 import Link from 'next/link'
 import { Common } from 'styles/common'
+import Pagination from 'components/Pagination'
+import Issuses from 'components/Issues'
+import Loading from 'components/Loading'
 
 interface keyInterface {
   id: number
@@ -18,14 +21,16 @@ const Issues = () => {
   const [localName, setLocalName] = useState<string | null>('')
   /* 패칭한 이슈 */
   const [issues, setIssues] = useState<userRepoIssue[]>([])
+  /* 로딩 axios 요청 간의 로딩 */
+  const [loading, setLoading] = useState<boolean>(false)
 
   // -- 페이지네이션 --
-  // const [currentPage, setCurrentPage] = useState(1)
-  // const [postsPerPage] = useState(10)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [postsPerPage] = useState(10)
 
-  // const indexOfLastPost = currentPage * postsPerPage
-  // const indexOfFirstPost = indexOfLastPost - postsPerPage
-  // const currentPosts = issues.slice(indexOfFirstPost, indexOfLastPost)
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = issues.slice(indexOfFirstPost, indexOfLastPost)
 
   // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
   useEffect(() => {
@@ -41,7 +46,6 @@ const Issues = () => {
   useEffect(() => {
     if (keywords.length) {
       keywords.forEach((v, i) => {
-        // console.log(i, ':', v.name)
         fetchIssue(v.name)
       })
     }
@@ -49,6 +53,7 @@ const Issues = () => {
 
   const fetchIssue = useCallback(
     async (name) => {
+      setLoading(true)
       try {
         await axios.get(`https://api.github.com/repos/${localName}/${name}/issues`).then((res) => {
           if (res.status === 200) {
@@ -58,49 +63,30 @@ const Issues = () => {
       } catch (err) {
         console.error(err)
       }
+      setLoading(false)
     },
     [localName, issues]
   )
 
-  return (
-    <div css={userWrap}>
-      <h1 style={{ textAlign: 'center' }}>이슈 모아보기</h1>
+  const paginate = useCallback((pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }, [])
 
-      <div>
-        {issues.length ? (
-          <ul className="ulWrap">
-            {/* 10개만 보여주기 */}
-            {issues.map((v) => (
-              <li key={v.id}>
-                <div style={{ marginBottom: '15px' }}>
-                  <Link href={`${v.html_url}`}>
-                    <p>
-                      <a style={{ marginRight: 10 }}>{v.repository_url.replace('https://api.github.com/repos/', '')}</a>
-                      <a style={{ fontWeight: 'bold', color: '#0969da', cursor: 'pointer' }}>{v.title}</a>
-                    </p>
-                  </Link>
-                </div>
-                <div style={{ margin: '10px 0' }}>
-                  {v.labels.length ? (
-                    <div css={labelWrap}>
-                      {v.labels.map((v) => (
-                        <a key={v.id} style={{ marginRight: '5px' }}>
-                          {v.name}
-                        </a>
-                      ))}
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div>이슈가 아직 없어요...</div>
-        )}
-      </div>
-    </div>
+  return (
+    <>
+      {!loading ? (
+        <div css={userWrap}>
+          {issues.length ? (
+            <Issuses issues={issues} currentPosts={currentPosts} />
+          ) : (
+            <Loading comment={'데이터가 없어요...'} />
+          )}
+          <Pagination postsPerPage={postsPerPage} totalPosts={issues.length} paginate={paginate} />
+        </div>
+      ) : (
+        <Loading comment={'Loading...'} />
+      )}
+    </>
   )
 }
 
@@ -111,7 +97,25 @@ const userWrap = css`
   max-width: 1280px;
   margin: 0 auto;
 
+  .ulTHeader {
+    margin-top: 10px;
+    height: 50px;
+    padding: 0 40px;
+
+    div {
+      height: 100%;
+
+      p {
+        font-weight: bolder;
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
   ul {
+    margin: 0 0;
     list-style: none;
     padding: 0 40px;
   }
@@ -139,16 +143,5 @@ const userWrap = css`
     li & div {
       margin: 10px 0;
     }
-  }
-`
-
-const labelWrap = css`
-  a {
-    background-color: #d3d3d3;
-    font-size: 1rem !important;
-    margin-right: 5;
-    border: 1px solid #d3d3d3;
-    border-radius: 20px;
-    padding: 8px 10px;
   }
 `

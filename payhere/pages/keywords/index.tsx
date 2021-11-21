@@ -1,4 +1,5 @@
 import { css } from '@emotion/react'
+import Loading from 'components/Loading'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
@@ -41,17 +42,22 @@ const Keywords = () => {
 
   return (
     <div css={userWrap}>
-      <div css={infoWrap}>
-        <h1>등록된 키워드 페이지</h1>
-        <p>
-          <button type="button" onClick={() => router.back()}>
-            이전 페이지로
-          </button>
-          <button type="button" onClick={() => handleClearKeywords()}>
-            전체 삭제하기
-          </button>
-        </p>
-      </div>
+      {keywords.length ? (
+        <div css={infoWrap}>
+          <h1>등록된 키워드 페이지</h1>
+          <p>
+            <button type="button" onClick={() => router.back()}>
+              이전 페이지로
+            </button>
+            <button type="button" onClick={() => handleClearKeywords()}>
+              전체 삭제하기
+            </button>
+          </p>
+        </div>
+      ) : (
+        <div />
+      )}
+
       <div>
         <ul>
           {keywords.length ? (
@@ -68,7 +74,7 @@ const Keywords = () => {
               </li>
             ))
           ) : (
-            <div>등록한 데이터가 없어요...</div>
+            <Loading comment={'등록한 데이터가 없어요...'} />
           )}
         </ul>
       </div>
