@@ -41,23 +41,28 @@ const User = () => {
     localStorage.setItem('keywords', JSON.stringify(keywords))
   }, [keywords])
 
-  const fetchUser = useCallback(async (name) => {
-    try {
-      await axios.get(`https://api.github.com/users/${name}`).then((res) => {
-        if (res.status === 200) {
-          setUserInfo(Array(res.data))
-        }
-      })
-      await axios.get(`https://api.github.com/users/${name}/repos?per_page=20`).then((res) => {
-        if (res.status === 200) {
-          setRepos(res.data)
-        }
-        setFetchData(true)
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }, [])
+  const fetchUser = useCallback(
+    async (name) => {
+      try {
+        await axios.get(`https://api.github.com/users/${name}`).then((res) => {
+          if (res.status === 200) {
+            setUserInfo(Array(res.data))
+          }
+        })
+        await axios.get(`https://api.github.com/users/${name}/repos?per_page=20`).then((res) => {
+          if (res.status === 200) {
+            setRepos(res.data)
+          }
+          setFetchData(true)
+        })
+      } catch (err) {
+        console.log('err:', err)
+        alert('깃허브에 등록되지 않은 사용자입니다🥲\n검색 페이지로 돌아갑니다')
+        router.push('/')
+      }
+    },
+    [router]
+  )
 
   /* 로컬 스토리지에 퍼블릭 레포지토리 저장하기 */
   const addPublicRepo = useCallback(
@@ -86,7 +91,7 @@ const User = () => {
           {userInfo ? (
             <div>
               {userInfo.map((v) => (
-                <div key={v.id} style={{ paddingLeft: 20 }}>
+                <div key={v.id} className="userInfoMain">
                   <Link href={`${v.html_url}`} passHref={true}>
                     <img
                       src={`${v.avatar_url}`}
@@ -139,7 +144,7 @@ const User = () => {
               ) : (
                 <div css={nonDataWrap}>
                   <div>가져올 수 있는 데이터가 없어요... 🥲</div>
-                  <div>깃허브에 등록된 사람인지 다시 검색해주세요</div>
+                  <div>아무 글도 작성하지 않은 사용자일 수 있어요, 다시 검색해주세요</div>
                   <button onClick={() => router.push('/')}>다시 검색하러 가기</button>
                 </div>
               )}
@@ -156,7 +161,6 @@ const User = () => {
 export default User
 
 const userWrap = css`
-  min-width: 1080px;
   max-width: 1280px;
   margin: 0 auto;
 
@@ -166,6 +170,14 @@ const userWrap = css`
 
     @media (max-width: 420px) {
       width: 100%;
+    }
+
+    .userInfoMain {
+      padding-left: 20px;
+
+      @media (max-width: 420px) {
+        padding: 0 40px;
+      }
     }
   }
 
@@ -217,15 +229,15 @@ const userWrap = css`
     border-bottom: 1px solid grey;
     margin-bottom: 10px;
     padding: 10px;
+  }
 
-    a {
-      color: ${Common.colors.githubBlue};
-      font-weight: bolder;
-      font-size: 1.3rem;
-    }
-    p {
-      font-size: 0.9rem;
-    }
+  a {
+    color: ${Common.colors.githubBlue};
+    font-weight: bolder;
+    font-size: 1rem;
+  }
+  p {
+    font-size: 0.8rem;
   }
 
   button {

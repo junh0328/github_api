@@ -93,7 +93,6 @@ const Issues = () => {
 export default Issues
 
 const userWrap = css`
-  min-width: 1080px;
   max-width: 1280px;
   margin: 0 auto;
 

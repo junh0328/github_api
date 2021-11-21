@@ -32,9 +32,7 @@ const Issuses = ({ issues, currentPosts }: Props) => {
               {v.labels.length ? (
                 <div css={labelWrap}>
                   {v.labels.map((v) => (
-                    <a key={v.id} style={{ marginRight: '5px' }}>
-                      {v.name}
-                    </a>
+                    <a key={v.id}>{v.name}</a>
                   ))}
                 </div>
               ) : (
@@ -51,12 +49,21 @@ const Issuses = ({ issues, currentPosts }: Props) => {
 export default Issuses
 
 const labelWrap = css`
+  display: flex;
+  flex-wrap: wrap;
+
   a {
     background-color: #d3d3d3;
-    font-size: 1rem !important;
-    margin-right: 5;
+    font-size: 0.8rem !important;
+    margin-right: 5px;
     border: 1px solid #d3d3d3;
     border-radius: 20px;
     padding: 8px 10px;
+
+    @media (max-width: 420px) {
+      font-size: 0.8rem !important;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
   }
 `

@@ -7,11 +7,15 @@ import router from 'next/router'
 const AppLayOut = () => {
   const [query, setQuery] = useState('')
   const [isName, setIsName] = useState<boolean>(false)
+  const [localName, setLocalName] = useState('')
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const bool = localStorage.getItem('name')
-      if (bool?.length) setIsName(true)
+      if (bool?.length) {
+        setIsName(true)
+        setLocalName(bool)
+      }
     }
   }, [])
 
@@ -40,26 +44,35 @@ const AppLayOut = () => {
 
   return (
     <div css={userWrap}>
-      <nav css={navbar}>
-        <form onSubmit={fetchRepo}>
-          <Link href="/">
-            <a>
-              <img src="https://pic.onlinewebfonts.com/svg/img_326384.png" alt="github" />
-            </a>
-          </Link>
-          <input style={{ width: 300 }} value={query} onChange={onChange} placeholder="Search or jump to..." />
-          <button>
-            <Link href="/keywords">
-              <a>Repository</a>
+      {localName ? (
+        <nav css={navbar}>
+          <form onSubmit={fetchRepo}>
+            <Link href="/">
+              <a>
+                <img src="https://pic.onlinewebfonts.com/svg/img_326384.png" alt="github" />
+              </a>
             </Link>
-          </button>
-          <button>
-            <Link href="/issues">
-              <a>Issues</a>
-            </Link>
-          </button>
-        </form>
-      </nav>
+            <input value={query} onChange={onChange} placeholder="Search or jump to..." />
+            <button>
+              <Link href={`/user/${localName}`}>
+                <a>Main</a>
+              </Link>
+            </button>
+            <button>
+              <Link href="/keywords">
+                <a>Repository</a>
+              </Link>
+            </button>
+            <button>
+              <Link href="/issues">
+                <a>Issues</a>
+              </Link>
+            </button>
+          </form>
+        </nav>
+      ) : (
+        <div></div>
+      )}
     </div>
   )
 }
@@ -67,8 +80,29 @@ const AppLayOut = () => {
 export default AppLayOut
 
 const userWrap = css`
-  min-width: 1080px;
-  height: 5vh;
+  width: 100%;
+
+  background-color: ${Common.colors.navy};
+  @media (max-width: 420px) {
+    display: flex;
+    form {
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    img {
+      display: none;
+    }
+    input {
+      text-align: center;
+      padding: 10px 5px !important;
+      width: 100% !important;
+    }
+    button {
+      width: 100%;
+      border-radius: none !important;
+      border-bottom: 1px solid white !important;
+    }
+  }
   form {
     padding-left: 2%;
     display: flex;

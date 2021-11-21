@@ -14,9 +14,9 @@ const Home: NextPage = () => {
       e.preventDefault()
       localStorage.setItem('name', name)
       setName('')
-      router.push(`/user/${name}`)
+      location.replace(`/user/${name}`)
     },
-    [name, router]
+    [name]
   )
   return (
     <>
@@ -42,7 +42,7 @@ export default Home
 const wrap = css`
   background-color: ${Common.colors.skyblue};
   width: 100%;
-  height: 95vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
