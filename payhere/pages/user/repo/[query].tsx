@@ -79,18 +79,23 @@ const Repository = () => {
   /* 로컬 스토리지에 퍼블릭 레포지토리 저장하기 */
   const addPublicRepo = useCallback(
     (id, name, description) => {
-      if (keywords.length >= 4) {
-        alert('더이상 즐겨찾는 레포지토리를 추가할 수 없습니다.')
+      if (keywords.some((keyword) => keyword.id === id) === true) {
+        alert('같은 레포지토리를 추가할 수 없습니다')
         return
       } else {
-        alert(`id:${id}\n레포지토리명: ${name}\n설명: ${description}`)
+        if (keywords.length >= 4) {
+          alert('더이상 즐겨찾는 레포지토리를 추가할 수 없습니다.')
+          return
+        } else {
+          alert(`id:${id}\n레포지토리명: ${name}\n설명: ${description}`)
 
-        const newKeyword: keyInterface = {
-          id: id,
-          name: name,
-          description: description,
+          const newKeyword: keyInterface = {
+            id: id,
+            name: name,
+            description: description,
+          }
+          setKeywords([...keywords, newKeyword])
         }
-        setKeywords([...keywords, newKeyword])
       }
     },
     [keywords]
