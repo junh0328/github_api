@@ -49,7 +49,8 @@ const User = () => {
             setUserInfo(Array(res.data))
           }
         })
-        await axios.get(`https://api.github.com/users/${name}/repos?per_page=20`).then((res) => {
+        /* /users/{username}/repos */
+        await axios.get(`https://api.github.com/users/${name}/repos?sort=updated&per_page=100`).then((res) => {
           if (res.status === 200) {
             setRepos(res.data)
           }

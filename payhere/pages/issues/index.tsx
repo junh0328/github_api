@@ -2,8 +2,6 @@ import { css } from '@emotion/react'
 import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { userRepoIssue } from 'types'
-import Link from 'next/link'
-import { Common } from 'styles/common'
 import Pagination from 'components/Pagination'
 import Issuses from 'components/Issues'
 import Loading from 'components/Loading'
@@ -55,11 +53,13 @@ const Issues = () => {
     async (name) => {
       setLoading(true)
       try {
-        await axios.get(`https://api.github.com/repos/${localName}/${name}/issues`).then((res) => {
-          if (res.status === 200) {
-            setIssues(issues.concat(res.data))
-          }
-        })
+        await axios
+          .get(`https://api.github.com/repos/${localName}/${name}/issues?perpage=100&sort=created`)
+          .then((res) => {
+            if (res.status === 200) {
+              setIssues(issues.concat(res.data))
+            }
+          })
       } catch (err) {
         console.error(err)
       }
