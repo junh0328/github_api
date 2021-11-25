@@ -22,6 +22,8 @@ const Issues = () => {
   /* 로딩 axios 요청 간의 로딩 */
   const [loading, setLoading] = useState<boolean>(false)
 
+  const [arr, setArr] = useState<any[]>(issues)
+
   // -- 페이지네이션 --
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage] = useState(10)
@@ -29,6 +31,18 @@ const Issues = () => {
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
   const currentPosts = issues.slice(indexOfFirstPost, indexOfLastPost)
+
+  useEffect(() => {
+    console.log('rendered')
+  }, [])
+
+  useEffect(() => {
+    console.log(
+      'issues:',
+      issues
+      // issues.forEach((issue) => console.log('id:', issue.id))
+    )
+  }, [issues])
 
   // ① window 즉, 브라우저가 모두 렌더링된 상태에서 해당 함수를 실행할 수 있도록 작업
   useEffect(() => {
@@ -57,7 +71,7 @@ const Issues = () => {
           .get(`https://api.github.com/repos/${localName}/${name}/issues?perpage=100&sort=created`)
           .then((res) => {
             if (res.status === 200) {
-              setIssues(issues.concat(res.data))
+              setIssues((issues) => [...issues, ...res.data])
             }
           })
       } catch (err) {
