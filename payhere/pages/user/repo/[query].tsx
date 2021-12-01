@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
-import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
 import { userRepoData, userRepoIssue } from 'types'
 import Link from 'next/link'
+import axios from 'apis'
 
 interface keyInterface {
   id: number
@@ -54,7 +54,7 @@ const Repository = () => {
 
   const fetchRepo = useCallback(async (localName, query) => {
     try {
-      await axios.get(`https://api.github.com/repos/${localName}/${query}`).then((res) => {
+      await axios.get(`/repos/${localName}/${query}`).then((res) => {
         if (res.status === 200) {
           setResult(Array(res.data))
         }
@@ -66,7 +66,7 @@ const Repository = () => {
 
   const fetchIssue = useCallback(async (localName, query) => {
     try {
-      await axios.get(`https://api.github.com/repos/${localName}/${query}/issues`).then((res) => {
+      await axios.get(`/repos/${localName}/${query}/issues`).then((res) => {
         if (res.status === 200) {
           setIssue(res.data)
         }

@@ -1,5 +1,6 @@
 import { css } from '@emotion/react'
-import axios from 'axios'
+import axios from 'apis'
+
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -44,13 +45,13 @@ const User = () => {
   const fetchUser = useCallback(
     async (name) => {
       try {
-        await axios.get(`https://api.github.com/users/${name}`).then((res) => {
+        await axios.get(`/users/${name}`).then((res) => {
           if (res.status === 200) {
             setUserInfo(Array(res.data))
           }
         })
         /* /users/{username}/repos */
-        await axios.get(`https://api.github.com/users/${name}/repos?sort=updated&per_page=100`).then((res) => {
+        await axios.get(`/users/${name}/repos?sort=updated&per_page=100`).then((res) => {
           if (res.status === 200) {
             setRepos(res.data)
           }

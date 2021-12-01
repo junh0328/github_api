@@ -1,10 +1,11 @@
 import { css } from '@emotion/react'
 import React, { useCallback, useEffect, useState } from 'react'
-import axios from 'axios'
+
 import { userRepoIssue } from 'types'
 import Pagination from 'components/Pagination'
 import Issuses from 'components/Issues'
 import Loading from 'components/Loading'
+import axios from 'apis'
 
 interface keyInterface {
   id: number
@@ -67,15 +68,14 @@ const Issues = () => {
     async (name) => {
       setLoading(true)
       try {
-        await axios
-          .get(`https://api.github.com/repos/${localName}/${name}/issues?perpage=100&sort=created`)
-          .then((res) => {
-            if (res.status === 200) {
-              setIssues((issues) => [...issues, ...res.data])
-            }
-          })
+        await axios.get(`/repos/${localName}/${name}/issues?perpage=100&sort=created`).then((res) => {
+          if (res.status === 200) {
+            setIssues((issues) => [...issues, ...res.data])
+          }
+        })
       } catch (err) {
         console.error(err)
+        setIssues([])
       }
       setLoading(false)
     },
